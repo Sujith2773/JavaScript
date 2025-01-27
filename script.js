@@ -1,4 +1,4 @@
-// popup-box,popup-overlay,button
+// selecting popup-box,popup-overlay,button
 var Popupoverlay = document.querySelector(".popup-overlay")
 var Popupbox = document.querySelector(".popup-box")
 var Addpopupbutton = document.getElementById("add-popup-button")
@@ -39,7 +39,6 @@ Addbook.addEventListener("click",function(event){
 })
 
 function deletebook(event){
-    event.target.parentElemet.remove()
+    event.target. parentElement.remove();
 }
-
 
