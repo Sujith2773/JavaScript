@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Bar</title>
+
+    <style>
+        body{
+            background-color: #191970;
+            /* background-color: #ffa000;
+            background-color: #f25767;
+            background-color: rgba(0,0,0,0.2);
+            background-color: rgba(0,0,0,0.5);
+            background-color: #78f8ec; */
+        }
+
+        .wrapper{
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            margin: auto;
+            top:  0;
+            left: 0;
+            right: 0;
+            display:flex
+        }
+
+        .container{
+            font: 1px;
+            padding: 0 20px;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container chart" data-size="300" data-value="73" data-arrow="down"></div>
+    </div>
+
+    <script>
+        class Dial {
+            constructor(container) {
+                console.log('--->'+container);
+            this.container = container;
+            this.size = this.container.dataset.size; // this.size = 300;
+                console.log('--->'+this.size);
+            this.strokeWidth = this.size / 8; // this.strokeWidth = 300 / 8; = 37.5;
+                console.log('--->'+this.strokeWidth);
+            this.radius = this.size / 2 - this.strokeWidth / 2; // this.radius = 300 / 2 = 150 - 37.5 / 2 = 150 - 18.75 = 131.25;
+                console.log('--->'+this.radius);
+            this.value = this.container.dataset.value; // this.value = 73;
+                console.log('--->'+this.value); 
+            this.direction = this.container.dataset.arrow; // this.direction = down;
+                console.log('--->'+this.direction); 
+            this.svg;
+                console.log(this.svg);
+            this.defs;
+                console.log(this.defs);
+            this.slice;
+                console.log(this.slice);
+            this.overlay;
+                console.log(this.overlay);
+            this.text;
+                console.log(this.text);
+            this.arrow;
+                console.log(this.arrow);
+           this.create();
+            }
+
+            create() {
+               this.createSvg();
+               this.createDefs();
+               this.createSlice();
+               this.createOverlay();
+               this.createText();
+               this.createArrow();
+               this.container.appendChild(this.svg);
+            }
+
+            createSvg() {
+               let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+               svg.setAttribute("width", `${this.size}px`);
+               svg.setAttribute("height", `${this.size}px`);
+               this.svg = svg;
+                       console.log('--->',this.svg);
+            }
+
+            createDefs() {
+               var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs"),
+               linearGradient = document.createElementNS("http://www.w3.org/2000/svg","linearGradient"),
+               stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop"),
+               stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop"),
+               linearGradientBackground = document.createElementNS("http://www.w3.org/2000/svg","background"
+         );
+         console.log('--->',defs);
+                console.log('--->',linearGradient);
+                console.log('--->',stop1);
+                console.log('--->',stop2);
+                console.log('--->',linearGradientBackground);
+
+
+               linearGradient.setAttribute("id", "gradient");
+                       console.log('--->',linearGradient);
+               stop1.setAttribute("stop-color", "#ffa000");
+                       console.log('--->',stop1);
+               stop1.setAttribute("offset", "0%");
+                       console.log('--->',stop1);
+               linearGradient.appendChild(stop1);
+                       console.log(linearGradient);
+               stop2.setAttribute("stop-color", "#f25767");
+                       console.log('--->',stop2);
+               stop2.setAttribute("offset", "100%");
+                       console.log('--->',stop2);
+               linearGradient.appendChild(stop2);
+                       console.log(linearGradient);
+               linearGradientBackground.setAttribute("id", "gradient-background");
+                       console.log('--->',linearGradientBackground);
+               var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                       console.log('--->',stop1);
+               stop1.setAttribute("stop-color", "rgba(0,0,0,0.2)");
+                       console.log('--->',stop1);
+               stop1.setAttribute("offset", "0%");
+                       console.log('--->',stop1);
+               linearGradientBackground.appendChild(stop1);
+                       console.log('--->',linearGradientBackground);
+               var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                       console.log('--->',stop2);
+               stop2.setAttribute("stop-color", "rgba(0,0,0,0.5)");
+                       console.log('--->',stop2);
+               stop2.setAttribute("offset", "1000%");
+               linearGradientBackground.appendChild(stop2);
+                       console.log('--->',linearGradientBackground);
+               defs.appendChild(linearGradient);
+                       console.log('--->',defs);
+               defs.appendChild(linearGradientBackground);
+                       console.log('--->',defs);
+               this.svg.appendChild(defs);
+                       console.log('--->',this.svg);
+               this.defs = defs;
+             }
+
+            createSlice() {
+               let slice = document.createElementNS("http://www.w3.org/2000/svg", "path");
+               slice.setAttribute("fill", "none");
+               slice.setAttribute("stroke", "url(#gradient)");
+               slice.setAttribute("stroke-width", this.strokeWidth);  // stroke-width = 37.5;
+                      console.log('--->',slice);
+               slice.setAttribute("transform",
+                  `translate(${this.strokeWidth / 2},${this.strokeWidth / 2})`
+        );  // translate(37.5 / 2, 37.5 / 2) = translate(18.75, 18.75) = translate(18.75px, 18.75px)
+               slice.setAttribute("class", "animate-draw");
+               this.svg.appendChild(slice);
+               this.slice = slice;
+             }
+
+            createOverlay() {
+                const r = this.size - this.size / 2 - this.strokeWidth / 2;  // r = 300 - 300 / 2 - 37.5 / 2 = 300 - 150 - 18.75 = 131.25;
+                const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+                circle.setAttribute("cx", this.size / 2); // cx = 300 / 2 = 150;
+                circle.setAttribute("cy", this.size / 2); // cy = 300 / 2 = 150;
+                circle.setAttribute("r", r); // r = 131.25;
+                circle.setAttribute("fill", "url(#gradient-background)");
+                circle.setAttribute("class", "animate-draw");
+                      console.log('--->',circle);
+                this.svg.appendChild(circle);
+                this.overlay = circle;
+            }
+
+            createText() {
+               const fontSize = this.size / 3.5; // fontSize = 300 / 3.5 = 85.71428571428571;
+               let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+               text.setAttribute("x", this.size / 2 + fontSize / 7.5);  // x = 300 / 2 + 85.71428571428571 / 7.5 = 150 + 11.428571428571427 = 161.42857142857142;
+               text.setAttribute("y", this.size / 2 + fontSize / 4);    // y = 300 / 2 + 85.71428571428571 / 4 = 150 + 21.428571428571427 = 171.42857142857142;
+               text.setAttribute("font-family", "Century Gothic Lato");
+               text.setAttribute("font-size", fontSize); // font-size = 85.71428571428571;
+               text.setAttribute("fill", "#78f8ec");
+               text.setAttribute("text-anchor", "middle");
+               const tspanSize = fontSize / 3;  // tspanSize = 85.71428571428571 / 3 = 28.571428571428573;
+                     console.log('--->',tspanSize);
+               text.innerHTML = `${0}% `;  // text.innerHTML = 0%;
+               this.svg.appendChild(text);
+               this.text = text;
+                     console.log('--->',text);
+            }
+
+            createArrow() {
+              var arrowSize = this.size / 10; // arrowSize = 300 / 10 = 30;
+                     console.log('arrowSize--->',arrowSize);
+              var mapDir = {
+              up: [(arrowYOffset = arrowSize / 2), (m = -1)], // up = (15, -1)                    
+              down: [(arrowYOffset = 0), (m = 1)] // down = (0, 1)
+      };
+                console.log('mapDir--->',mapDir);
+                    
+                var getDirection = (i) => {
+                    console.log('getDirection--->',i);
+                if (i === "up") return mapDir.up;
+                else if (i === "down") return mapDir.down;
+                else return [0, 0];
+                console.log('i--->',i);
+                }
+
+           function getDirection(i) {
+              return mapDir[i];
+      }
+             var [arrowYOffset, m] = getDirection(this.direction);
+
+             let arrowPosX = this.size / 2 - arrowSize / 2,
+             arrowPosY = this.size - this.size / 3 + arrowYOffset,
+             arrowDOffset = m * (arrowSize / 1.5),
+             arrow = document.createElementNS("http://www.w3.org/2000/svg", "path");
+             arrow.setAttribute("d",`M 0 0 ${arrowSize} 0 ${arrowSize / 2} ${arrowDOffset} 0 0 Z`
+    );
+
+             arrow.setAttribute("fill", "none");
+             arrow.setAttribute("opacity", "0.6");
+             arrow.setAttribute("transform", `translate(${arrowPosX},${arrowPosY})`);
+             this.svg.appendChild(arrow);
+             this.arrow = arrow;
+            }
+
+        animateStart() {
+             let v = 0;
+             const intervalOne = setInterval(() => {
+             const p = +(v / this.value).toFixed(2);
+             const a = p < 0.95 ? 2 - 2 * p : 0.05;
+             v += a;
+          if (v >= +this.value) {
+             v = this.value;
+             clearInterval(intervalOne);
+           }
+            this.setValue(v);
+         }, 10);
+           };
+
+           polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+           const angleInRadians = ((angleInDegrees - 180) * Math.PI) / 180.0;
+           return {
+               x: centerX + radius * Math.cos(angleInRadians),
+               y: centerY + radius * Math.sin(angleInRadians)
+            };
+          }
+          
+           describeArc(x, y, radius, startAngle, endAngle) {
+             const start = this.polarToCartesian(x, y, radius, endAngle);
+             const end = this.polarToCartesian(x, y, radius, startAngle);
+             const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+             const d = ["M",start.x,start.y,"A",radius,radius,0,largeArcFlag,0,end.x,end.y].join(" ");
+          return d;
+          }
+
+           setValue(value) {
+               let c = (value / 100) * 360;
+               if (c === 360) c = 359.99;
+               const xy = this.size / 2 - this.strokeWidth / 2;
+               const d = this.describeArc(xy, xy, xy, 180, 180 + c);
+               this.slice.setAttribute("d", d);
+               const tspanSize = this.size / 3.5 / 3;
+               this.text.innerHTML = `${Math.floor(value)}% `;
+          }
+
+          animateReset() {
+          this.setValue(0);
+          }
+
+        } 
+        
+        const constainers = document.getElementsByClassName("chart");
+        const dial = new Dial(constainers[0]);
+        dial.animateStart();
+    </script>
+</body>
+</html>
